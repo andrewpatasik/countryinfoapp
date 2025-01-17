@@ -82,7 +82,7 @@ const DesktopNavigation = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 side="right"
-                className="bg-gray-200 min-w-56 rounded border-2 pl-2"
+                className="bg-gray-50 min-w-56 rounded border border-gray-300 pl-2"
               >
                 <DropdownMenuItem>
                   <Link href={user.href}>

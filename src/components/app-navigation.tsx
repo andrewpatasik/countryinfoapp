@@ -5,7 +5,7 @@ import MobileNavigation from "./mobile-navigation";
 import { SidebarTrigger } from "./ui/sidebar";
 
 const AppNavigation = () => {
-  const isMobile = useIsMobile(430);
+  const isMobile = useIsMobile(431);
 
 
   return !isMobile ? (

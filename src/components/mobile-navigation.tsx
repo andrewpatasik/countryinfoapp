@@ -7,7 +7,7 @@ import {
 import { HouseIcon, HeartIcon, UserIcon } from "lucide-react";
 import { FC, ReactElement } from "react";
 
-const ICON_SIZE:number = 36;
+const ICON_SIZE:number = 30;
 
 const navigationLink: { title: string; href: string; icon: any }[] = [
   {
