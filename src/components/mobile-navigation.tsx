@@ -7,25 +7,27 @@ import {
 import { HouseIcon, HeartIcon, UserIcon } from "lucide-react";
 import { FC, ReactElement } from "react";
 
+const ICON_SIZE:number = 36;
+
 const navigationLink: { title: string; href: string; icon: any }[] = [
   {
     title: "Home",
     href: "/",
-    icon: <HouseIcon size={36} />,
+    icon: <HouseIcon size={ICON_SIZE} />,
   },
   {
     title: "Favorites",
-    href: "#",
-    icon: <HeartIcon size={36} />,
+    href: "/favorites",
+    icon: <HeartIcon size={ICON_SIZE} />,
   },
   {
     title: "Profile",
     href: "/login",
-    icon: <UserIcon size={36} />,
+    icon: <UserIcon size={ICON_SIZE} />,
   },
 ];
 
-const BottomNavigation = () => {
+const MobileNavigation = () => {
   return (
     <div className="bg-gray-100 w-full fixed bottom-0 p-4">
       <NavigationMenu className="h-full">
@@ -61,4 +63,4 @@ const ListItem: FC<IListItem> = ({ className, children, href, title }) => {
   );
 };
 
-export default BottomNavigation;
+export default MobileNavigation;
