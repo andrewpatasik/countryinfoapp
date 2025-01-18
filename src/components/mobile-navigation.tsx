@@ -29,7 +29,7 @@ const navigationLink: { title: string; href: string; icon: any }[] = [
 
 const MobileNavigation = () => {
   return (
-    <div className="bg-gray-100 w-full fixed bottom-0 p-4">
+    <div className="bg-gray-100 w-full fixed z-50 bottom-0 p-4">
       <NavigationMenu className="h-full">
         <NavigationMenuList className="w-screen h-full justify-around">
           {navigationLink.map((item, index) => (
