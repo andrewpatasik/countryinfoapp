@@ -2,20 +2,11 @@
 import { useIsMobile } from "@/hooks/use-mobile";
 import DesktopNavigation from "./desktop-navigation";
 import MobileNavigation from "./mobile-navigation";
-import { SidebarTrigger } from "./ui/sidebar";
 
 const AppNavigation = () => {
   const isMobile = useIsMobile(431);
 
-
-  return !isMobile ? (
-    <>
-      <DesktopNavigation />
-      <SidebarTrigger />
-    </>
-  ) : (
-    <MobileNavigation />
-  );
+  return !isMobile ? <DesktopNavigation /> : <MobileNavigation />;
 };
 
 export default AppNavigation;

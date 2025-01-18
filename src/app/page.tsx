@@ -1,4 +1,6 @@
 "use client";
+import CardPreview from "@/components/card-preview";
+import Topbar from "@/components/top-bar";
 import { gql, useQuery } from "@apollo/client";
 
 const GET_COUNTRIES_QUERY = gql`
@@ -12,20 +14,33 @@ const GET_COUNTRIES_QUERY = gql`
   }
 `;
 
-const Home = () => {
-  const { data, loading } = useQuery(GET_COUNTRIES_QUERY);
+const dummyCountry = [
+  {
+    name: "Switzerland",
+    capital: "Bern",
+    currency: "CHE,CHF,CHW",
+    emoji: "🇨🇭",
+    __typename: "Country",
+  },
+];
 
-  if (loading) return <p>loading</p>
+const Home = () => {
+  // const { data, loading } = useQuery(GET_COUNTRIES_QUERY);
+
+  // if (loading) return <p>loading</p>;
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center text-gray-400">
-      <h1 className="text-3xl font-bold">Home</h1>
-      <ul>
-        {data.countries.map((country: any) => (
-          <li>
-            <p>{country.name}</p>
-            <p>{country.capital}</p>
-          </li>
+    <div className="relative min-h-screen text-gray-400">
+      <Topbar />
+      <ul className="py-24 flex flex-col space-y-4 w-full items-center">
+        {dummyCountry.map((country) => (
+            <CardPreview
+              key={country.name}
+              capital={country.capital}
+              code={country.emoji}
+              currency={country.currency}
+              name={country.name}
+            />
         ))}
       </ul>
     </div>
