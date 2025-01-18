@@ -3,9 +3,9 @@ import CardPreview from "@/components/card-preview";
 import LoadingIndicator from "@/components/loading-indicator";
 import Modal from "@/components/modal";
 import Topbar from "@/components/top-bar";
+import { useCountry } from "@/hooks/use-country";
 import { useModal } from "@/hooks/use-modal";
 import { gql, useQuery } from "@apollo/client";
-import { useEffect } from "react";
 
 const GET_COUNTRIES_QUERY = gql`
   query getCountries {
@@ -66,8 +66,7 @@ const dummyCountry = [
 const Home = () => {
   const { data, loading } = useQuery(GET_COUNTRIES_QUERY);
   const { isModalOpen, handleIsModalChange } = useModal();
-
-  useEffect(() => console.log(data?.countries), [data]);
+  const { country, fetchCountry } = useCountry();
 
   if (loading)
     return (
@@ -78,17 +77,18 @@ const Home = () => {
 
   return (
     <div className="relative min-h-screen lg:px-4 text-gray-400">
-      <Modal open={isModalOpen} onOpenChange={handleIsModalChange} />
+      <Modal modalContent={country} open={isModalOpen} onOpenChange={handleIsModalChange} />
       <Topbar />
       <ul className="py-24 w-full grid grid-cols-1 md:px-4 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {data.countries.map((country, index) => (
           <CardPreview
-            key={country.name}
+            key={index}
             capital={country.capital}
             code={country.emoji}
             currency={country.currency}
             name={country.name}
             handleIsModalOpen={handleIsModalChange}
+            handleFetchCountry={fetchCountry}
           />
         ))}
       </ul>

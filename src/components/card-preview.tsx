@@ -7,9 +7,9 @@ import {
 } from "./ui/card";
 import { FC } from "react";
 import { convertEmojiToIso } from "@/lib/utils";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { MapPin, ArrowUpRight, DollarSign } from "lucide-react";
 import { Separator } from "./ui/separator";
+import UserAvatar from "./user-avatar";
 
 interface ICardPreview {
   currency: string;
@@ -17,6 +17,7 @@ interface ICardPreview {
   name: string;
   capital: string;
   handleIsModalOpen: () => void;
+  handleFetchCountry: (countryCode: string) => Promise<void>;
 }
 
 const CardPreview: FC<ICardPreview> = ({
@@ -25,20 +26,25 @@ const CardPreview: FC<ICardPreview> = ({
   name,
   currency,
   handleIsModalOpen,
+  handleFetchCountry,
 }) => {
+  const countryCode = convertEmojiToIso(code) as string;
+
   return (
     <Card className="mx-auto w-11/12 md:w-full">
       <CardHeader className="bg-gray-100 py-4 flex flex-row items-center justify-between">
-        <Avatar>
-          <AvatarImage
-            src={`https://flagcdn.com/w40/${convertEmojiToIso(
-              code
-            )?.toLowerCase()}.png`}
-            alt="flag-icon"
-          />
-          <AvatarFallback>{code}</AvatarFallback>
-        </Avatar>
-        <button onClick={handleIsModalOpen}>
+        <UserAvatar
+          src={`https://flagcdn.com/w40/${countryCode?.toLowerCase()}.png`}
+          alt={`${countryCode} flag icon`}
+          fallback={countryCode}
+        />
+        <button
+          onClick={() => {
+            handleFetchCountry(countryCode).then((result) =>
+              handleIsModalOpen()
+            );
+          }}
+        >
           <ArrowUpRight className="text-gray-400 size-8 hover:text-blue-500 hover:ease-in-out" />
         </button>
       </CardHeader>
