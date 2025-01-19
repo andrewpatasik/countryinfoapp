@@ -6,7 +6,7 @@ import {
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
 import { toast } from "@/hooks/use-toast";
-import { HouseIcon, HeartIcon, UserIcon } from "lucide-react";
+import { HouseIcon, HeartIcon, UserIcon, Sparkle } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { FC, ReactElement } from "react";
 
@@ -17,11 +17,6 @@ const navigationLink: { title: string; href?: string; icon: any }[] = [
     title: "Home",
     href: "/",
     icon: <HouseIcon size={ICON_SIZE} />,
-  },
-  {
-    title: "Favorites",
-    href: "/favorites",
-    icon: <HeartIcon size={ICON_SIZE} />,
   },
   {
     title: "Profile",
@@ -35,7 +30,7 @@ const MobileNavigation = ({
   userData: UserValue | undefined;
 }) => {
   return (
-    <div className="bg-gray-100 w-full fixed z-50 bottom-0 p-4">
+    <div className="bg-gray-100 w-full fixed z-50 bottom-0 p-4 border-t">
       <NavigationMenu className="h-full">
         <NavigationMenuList className="w-screen h-full justify-around">
           {navigationLink.map((item, index) => (

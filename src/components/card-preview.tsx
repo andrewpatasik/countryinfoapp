@@ -38,17 +38,19 @@ const CardPreview: FC<ICardPreview> = ({
           alt={`${countryCode} flag icon`}
           fallback={countryCode}
         />
-        <button
-          onClick={() => {
-            handleFetchCountry(countryCode).then((result) =>
-              handleIsModalOpen()
-            );
-          }}
-        >
-          <ArrowUpRight className="text-gray-400 size-8 hover:text-blue-500 hover:ease-in-out" />
-        </button>
+        <div className="flex items-center space-x-2">
+          <button
+            onClick={() => {
+              handleFetchCountry(countryCode).then((result) =>
+                handleIsModalOpen()
+              );
+            }}
+          >
+            <ArrowUpRight className="text-gray-400 size-8 hover:text-blue-500 hover:ease-in-out" />
+          </button>
+        </div>
       </CardHeader>
-      <CardContent className="pt-4 pb-2">
+      <CardContent className="flex justify-between pt-4 pb-2">
         <CardTitle>{name}</CardTitle>
         <div className="flex space-x-1 mt-1 items-center">
           <MapPin className="size-4" />

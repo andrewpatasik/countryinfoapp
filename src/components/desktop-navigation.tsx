@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronsUpDown, LogOut, Heart, House, User } from "lucide-react";
+import { ChevronsUpDown, LogOut, House, User } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { signOut } from "next-auth/react";
 import {
@@ -29,11 +29,6 @@ const navigationLink: { title: string; href: string; icon: ReactNode }[] = [
     title: "Home",
     href: "/",
     icon: <House />,
-  },
-  {
-    title: "Favorites",
-    href: "/favorites",
-    icon: <Heart />,
   },
 ];
 const user: { name: string; avatar: string; icon: ReactNode; href: string } = {
