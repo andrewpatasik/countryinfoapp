@@ -1,6 +1,7 @@
 "use client";
 
 import { ChevronsUpDown, LogOut, Heart, House, User } from "lucide-react";
+import { signOut } from "next-auth/react"
 import {
   Sidebar,
   SidebarContent,
@@ -20,7 +21,7 @@ import {
 } from "@radix-ui/react-dropdown-menu";
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import { AvatarFallback } from "./ui/avatar";
-import Link from "next/link";
+import { UserValue } from "@/app/api/auth/[...nextauth]/route";
 
 const navigationLink: { title: string; href: string; icon: ReactNode }[] = [
   {
@@ -41,7 +42,7 @@ const user: { name: string; avatar: string; icon: ReactNode; href: string } = {
   href: "/login",
 };
 
-const DesktopNavigation = () => {
+const DesktopNavigation = ({userData}: {userData: UserValue | undefined}) => {
   return (
     <Sidebar>
       <SidebarContent>
@@ -75,7 +76,7 @@ const DesktopNavigation = () => {
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <span>{user.name}</span>
+                    <span>{userData? userData.name : user.name}</span>
                   </div>
                   <ChevronsUpDown className="ml-auto" />
                 </SidebarMenuButton>
@@ -85,12 +86,12 @@ const DesktopNavigation = () => {
                 className="bg-gray-50 min-w-56 rounded border border-gray-300 pl-2"
               >
                 <DropdownMenuItem>
-                  <Link href={user.href}>
+                  <button onClick={() => signOut()}>
                     <div className="flex space-x-1.5 items-center my-1">
                       <LogOut className="size-4 font-bold" />
                       <span className="text-sm ">Log Out</span>
                     </div>
-                  </Link>
+                  </button>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

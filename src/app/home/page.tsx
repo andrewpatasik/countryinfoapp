@@ -6,6 +6,7 @@ import Topbar from "@/components/top-bar";
 import { useCountry } from "@/hooks/use-country";
 import { useModal } from "@/hooks/use-modal";
 import { gql, useQuery } from "@apollo/client";
+import { useSession } from "next-auth/react";
 
 const GET_COUNTRIES_QUERY = gql`
   query getCountries {
@@ -67,10 +68,13 @@ const Home = () => {
   const { data, loading } = useQuery(GET_COUNTRIES_QUERY);
   const { isModalOpen, handleIsModalChange } = useModal();
   const { country, fetchCountry } = useCountry();
+  const {data: session} = useSession();
+
+  console.log(session)
 
   if (loading)
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center w-full min-h-screen">
         <LoadingIndicator />
       </div>
     );
