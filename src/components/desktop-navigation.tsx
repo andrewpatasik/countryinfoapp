@@ -1,7 +1,8 @@
 "use client";
 
 import { ChevronsUpDown, LogOut, Heart, House, User } from "lucide-react";
-import { signOut } from "next-auth/react"
+import { toast } from "@/hooks/use-toast";
+import { signOut } from "next-auth/react";
 import {
   Sidebar,
   SidebarContent,
@@ -42,7 +43,11 @@ const user: { name: string; avatar: string; icon: ReactNode; href: string } = {
   href: "/login",
 };
 
-const DesktopNavigation = ({userData}: {userData: UserValue | undefined}) => {
+const DesktopNavigation = ({
+  userData,
+}: {
+  userData: UserValue | undefined;
+}) => {
   return (
     <Sidebar>
       <SidebarContent>
@@ -76,7 +81,7 @@ const DesktopNavigation = ({userData}: {userData: UserValue | undefined}) => {
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <span>{userData? userData.name : user.name}</span>
+                    <span>{userData ? userData.name : user.name}</span>
                   </div>
                   <ChevronsUpDown className="ml-auto" />
                 </SidebarMenuButton>
@@ -86,7 +91,15 @@ const DesktopNavigation = ({userData}: {userData: UserValue | undefined}) => {
                 className="bg-gray-50 min-w-56 rounded border border-gray-300 pl-2"
               >
                 <DropdownMenuItem>
-                  <button onClick={() => signOut()}>
+                  <button
+                    onClick={() => {
+                      signOut();
+                      toast({
+                        title:
+                          "You have been logged out. Redirecting to sign up",
+                      });
+                    }}
+                  >
                     <div className="flex space-x-1.5 items-center my-1">
                       <LogOut className="size-4 font-bold" />
                       <span className="text-sm ">Log Out</span>

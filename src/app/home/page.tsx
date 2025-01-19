@@ -5,8 +5,10 @@ import Modal from "@/components/modal";
 import Topbar from "@/components/top-bar";
 import { useCountry } from "@/hooks/use-country";
 import { useModal } from "@/hooks/use-modal";
+import { toast } from "@/hooks/use-toast";
 import { gql, useQuery } from "@apollo/client";
 import { useSession } from "next-auth/react";
+import { useEffect } from "react";
 
 const GET_COUNTRIES_QUERY = gql`
   query getCountries {
@@ -70,7 +72,12 @@ const Home = () => {
   const { country, fetchCountry } = useCountry();
   const {data: session} = useSession();
 
-  console.log(session)
+  useEffect(() => {
+    if (session) toast({
+      title: 'You are successfully logged in. Welcome!'
+    })
+  }, [session]);
+
 
   if (loading)
     return (
