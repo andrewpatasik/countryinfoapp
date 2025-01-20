@@ -2,18 +2,37 @@
 ## Project overview
 Create a modern single-page application (SPA) that combines country information display with AI-powered features.
 ## Setup instructions
-- Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-- Vivamus consectetur massa ac quam vehicula posuere.
-- Sed posuere nibh vel enim fringilla, at consectetur lorem rutrum.
-- Sed tempus enim sed dolor tincidunt, porta pulvinar enim accumsan.
-- Curabitur volutpat augue quis diam facilisis, quis semper ante fermentum.
+- clone the repository `git clone https://github.com/andrewpatasik/countryinfoapp.git` or `gh repo clone andrewpatasik/countryinfoapp`
+- `cd` into the repository and run `yarn` or `npm install` at the terminal
+- run `yarn run dev` or `npm run dev` and visit `http://localhost:3000` to open the app
 ## Available features
-- Aenean elementum elit at condimentum commodo.
-- Phasellus commodo augue at vehicula aliquam.
-- Mauris porttitor nunc nec turpis dictum laoreet.
-- Vivamus in justo et tellus tempus convallis non quis ipsum.
-- Nullam accumsan dolor ac porttitor aliquet.
+- Sign-in using Google OAuth
+- See collection of countries and it's detail
+- Responsive screen on mobile
+- [Not Complete] Chat with AI (result only on terminal)
 ## Technical decisions and architecture
-Morbi augue mauris, vulputate quis vehicula a, aliquam quis sapien. Fusce nec dui arcu. Pellentesque id fringilla libero. Sed tincidunt tortor mauris. Donec suscipit ullamcorper ligula, nec pulvinar elit maximus quis. Ut feugiat at massa non feugiat. Nunc vulputate purus turpis, vel sollicitudin mauris condimentum vitae. Cras posuere purus sit amet tristique porta. Maecenas iaculis sit amet nisl condimentum porta. Sed convallis, arcu quis semper condimentum, ante neque dictum ipsum, ullamcorper porta tortor sem eget est.
+This project built using React ecosystem which are:
+- Next.js
+- Tailwind CSS/Shadcn UI
+- Typescript
+- React hooks
+
+The other tools that being used:
+- Apollo Client/GraphQL
+- Next Auth
+
+The decisions to use Next.js is because the framework comes with optimization out of the box, paired with shadcn UI the development process will be more productive and optimized. Typescript is used to maintain the typed-safe of the code which makes the code less bug and to catch error easily. 
+
+Next.js also effective to run Node-based or Server-side code for the task which using NVIDIA NIM API, by creating route handlers to create the API and the client-side can call the API easily.
+
+Shadcn UI is a component-based library which has a vast of React-based component, Shadcn UI makes the view of the app looks proper and clean out of the box on all screen size.
+
+Apollo Client is state management to simplified GraphQL data management to implement Next Auth for Google authentication.
 ## Future improvements
-Cras cursus venenatis justo vel lobortis. Cras non mauris metus. Cras non pulvinar libero. Cras posuere posuere velit, vitae finibus dui. Suspendisse feugiat leo eros, id egestas nulla bibendum sit amet. Nulla porttitor aliquet nibh, a laoreet tortor viverra at. In tincidunt, felis et interdum consectetur, est mi placerat tellus, eu cursus justo dui a ante.
+There are aspects that could be improved, such as implementing **aggregator pattern** for modules/components into one main file, so when it gets imported in file, it will be bundled into one line to make the code structure more clean. 
+
+The next improvement should be **error handling** for page render states to show proper error page, another improvement is implementing **skeleton** loader for card component when the data is on loading.
+
+The next one is implementing **pagination** for data fetching to make the app execution time faster.
+
+On the chatbot with AI part, there are some parts that still missing such as response from the API is not displayed yet, then there should be typing animation when data stream is coming from the API response.
