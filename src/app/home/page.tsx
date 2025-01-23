@@ -11,6 +11,7 @@ import { gql, useQuery } from "@apollo/client";
 import { Sparkle } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { Key, useEffect } from "react";
+import Chatbot from "../_chatbot/chatbot";
 
 const GET_COUNTRIES_QUERY = gql`
   query getCountries {
@@ -51,7 +52,7 @@ const Home = () => {
         open={isModalOpen}
         onOpenChange={handleIsModalChange}
       />
-      <AppSheet open={isSheetOpen} onOpenChange={handleIsSheetChange} />
+      <Chatbot open={isSheetOpen} onOpenChange={handleIsSheetChange} />
       <Topbar />
       <ul className="py-24 w-full grid grid-cols-1 md:px-4 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {data.countries.map(
