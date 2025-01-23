@@ -18,15 +18,21 @@ export async function POST(req: Request) {
       stream: true,
     });
 
-    let generatedText = [];
+    let generatedText = new String("");
 
     for await (const chunk of completion) {
       const content = chunk.choices[0]?.delta?.content || "";
       process.stdout.write(content);
-      generatedText.push(content);
+      generatedText += content;
     }
 
-    return Response.json({ status: 200, messages: generatedText });
+    return Response.json({
+      data: {
+        isRoleUser: false,
+        message: generatedText,
+        timestamp: new Date(),
+      },
+    });
   } catch (error) {
     console.error(error);
   }

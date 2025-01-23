@@ -1,5 +1,5 @@
-import { AppSheet } from "@/components";
-import { FC, useState } from "react";
+import { AppSheet, LoadingIndicator } from "@/components";
+import { FC, useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Send } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -30,8 +30,18 @@ const Chatbot: FC<ChatbotValue> = ({ open, onOpenChange }) => {
     formState: { errors },
     resetField,
   } = useForm<contentDataType>();
-  const [generatedText, setGeneratedText] = useState([]);
+  const [isGeneratedTextLoading, setIsGeneratedTextLoading] =
+    useState<boolean>(false);
   const [chatHistory, setChatHistory] = useState<ChatHistoryValue[] | []>([]);
+
+  useEffect(() => {
+    const genTextLoadTimeout = setTimeout(
+      () => setIsGeneratedTextLoading(false),
+      1000
+    );
+
+    return () => clearTimeout(genTextLoadTimeout);
+  }, [isGeneratedTextLoading]);
 
   const onSubmit: SubmitHandler<contentDataType> = async (data: {
     content: any;
@@ -46,6 +56,7 @@ const Chatbot: FC<ChatbotValue> = ({ open, onOpenChange }) => {
       };
 
       setChatHistory((prev) => [...prev, userChat]);
+      setIsGeneratedTextLoading(true);
 
       // const response = await fetch(`${baseUrl}/api/chat`, {
       //   method: "POST",
@@ -55,8 +66,6 @@ const Chatbot: FC<ChatbotValue> = ({ open, onOpenChange }) => {
       //   body: JSON.stringify({ messages: data.content }),
       // });
       // const text = await response.json();
-      // setGeneratedText(text.messages);
-
     } catch (error) {
       console.error("Error:", error);
     }
@@ -69,15 +78,21 @@ const Chatbot: FC<ChatbotValue> = ({ open, onOpenChange }) => {
       onOpenChange={onOpenChange}
     >
       <ScrollArea className="flex flex-col h-full">
-        {chatHistory.map((chat) => (
+        {chatHistory.map((chat, index) => (
           <p
+            key={index}
             className={`${
-              !chat.isRoleUser ? "mr-auto" : "ml-auto text-right w-fit"
-            } mb-4 p-2 bg-gray-200 text-gray-500 rounded-lg`}
+              !chat.isRoleUser ? "mr-auto text-left" : "ml-auto text-right"
+            } w-fit mb-4 p-2 bg-gray-200 text-gray-500 rounded-lg`}
           >
             {chat.message}
           </p>
         ))}
+        {isGeneratedTextLoading && (
+          <span>
+            <LoadingIndicator variants="dots" />
+          </span>
+        )}
       </ScrollArea>
       <form
         onSubmit={handleSubmit(onSubmit)}
