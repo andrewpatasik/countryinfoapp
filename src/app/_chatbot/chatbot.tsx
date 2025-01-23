@@ -34,14 +34,14 @@ const Chatbot: FC<ChatbotValue> = ({ open, onOpenChange }) => {
     useState<boolean>(false);
   const [chatHistory, setChatHistory] = useState<ChatHistoryValue[] | []>([]);
 
-  useEffect(() => {
-    const genTextLoadTimeout = setTimeout(
-      () => setIsGeneratedTextLoading(false),
-      1000
-    );
+  // useEffect(() => {
+  //   const genTextLoadTimeout = setTimeout(
+  //     () => setIsGeneratedTextLoading(false),
+  //     1000
+  //   );
 
-    return () => clearTimeout(genTextLoadTimeout);
-  }, [isGeneratedTextLoading]);
+  //   return () => clearTimeout(genTextLoadTimeout);
+  // }, [isGeneratedTextLoading]);
 
   const onSubmit: SubmitHandler<contentDataType> = async (data: {
     content: any;
@@ -58,14 +58,16 @@ const Chatbot: FC<ChatbotValue> = ({ open, onOpenChange }) => {
       setChatHistory((prev) => [...prev, userChat]);
       setIsGeneratedTextLoading(true);
 
-      // const response = await fetch(`${baseUrl}/api/chat`, {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify({ messages: data.content }),
-      // });
-      // const text = await response.json();
+      const response = await fetch(`${baseUrl}/api/chat`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ prompt: data.content }),
+      });
+      const payload = await response.json();
+      setIsGeneratedTextLoading(false);
+      setChatHistory((prev) => [...prev, payload.data])
     } catch (error) {
       console.error("Error:", error);
     }
