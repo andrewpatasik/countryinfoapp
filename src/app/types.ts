@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 export type CountryValue = {
   name: string;
   capital: string;
@@ -14,3 +16,16 @@ export type CountryValue = {
     name: string;
   }[];
 };
+
+export interface UserDataValue {
+  name: string | undefined;
+  avatar: string | undefined;
+  icon: ReactNode | undefined;
+  href: string | undefined;
+}
+
+export interface NavigationLinkValue {
+  title: string;
+  href?: string;
+  icon: ReactNode;
+}

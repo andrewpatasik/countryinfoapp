@@ -13,7 +13,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "./ui/sidebar";
-import { ReactNode } from "react";
+import { useEffect } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,15 +23,16 @@ import {
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import { AvatarFallback } from "./ui/avatar";
 import { UserValue } from "@/app/api/auth/[...nextauth]/route";
+import { NavigationLinkValue, UserDataValue } from "@/app/types";
 
-const navigationLink: { title: string; href: string; icon: ReactNode }[] = [
+const navigationLink: NavigationLinkValue[] = [
   {
     title: "Home",
     href: "/",
     icon: <House />,
   },
 ];
-const user: { name: string; avatar: string; icon: ReactNode; href: string } = {
+let user: UserDataValue = {
   name: "User Profile",
   icon: <User />,
   avatar: "",
@@ -40,9 +41,32 @@ const user: { name: string; avatar: string; icon: ReactNode; href: string } = {
 
 const DesktopNavigation = ({
   userData,
+  status,
 }: {
   userData: UserValue | undefined;
+  status: "authenticated" | "loading" | "unauthenticated";
 }) => {
+  useEffect(() => {
+    switch (status) {
+      case "authenticated":
+        user = {
+          ...user,
+          name: userData?.name as string | undefined,
+          avatar: userData?.image as string | undefined,
+        };
+        break;
+      case "unauthenticated":
+        break;
+      default:
+        user = {
+          ...user,
+          name: "loading...",
+        };
+
+        break;
+    }
+  }, [status]);
+
   return (
     <Sidebar>
       <SidebarContent>

@@ -1,4 +1,4 @@
-import AppNavigation from "@/components/app-navigation";
+import { AppNavigation } from "@/components";
 import { Toaster } from "@/components/ui/toaster";
 import { ReactNode } from "react";
 

@@ -1,4 +1,5 @@
 import { UserValue } from "@/app/api/auth/[...nextauth]/route";
+import { NavigationLinkValue } from "@/app/types";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -6,13 +7,21 @@ import {
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
 import { toast } from "@/hooks/use-toast";
-import { HouseIcon, HeartIcon, UserIcon, Sparkle } from "lucide-react";
+import { HouseIcon, UserIcon } from "lucide-react";
 import { signOut } from "next-auth/react";
-import { FC, ReactElement } from "react";
+import { FC, ReactElement, ReactNode } from "react";
 
 const ICON_SIZE: number = 30;
 
-const navigationLink: { title: string; href?: string; icon: any }[] = [
+interface IListItem {
+  userData?: UserValue;
+  className?: string;
+  title: string;
+  href?: string;
+  children: ReactNode;
+}
+
+const navigationLink: NavigationLinkValue[] = [
   {
     title: "Home",
     href: "/",
@@ -26,8 +35,10 @@ const navigationLink: { title: string; href?: string; icon: any }[] = [
 
 const MobileNavigation = ({
   userData,
+  status
 }: {
-  userData: UserValue | undefined;
+  userData: UserValue | undefined,
+  status: "authenticated" | "loading" | "unauthenticated";
 }) => {
   return (
     <div className="bg-gray-100 w-full fixed z-50 bottom-0 p-4 border-t">
@@ -43,14 +54,6 @@ const MobileNavigation = ({
     </div>
   );
 };
-
-interface IListItem {
-  userData?: UserValue;
-  className?: string;
-  title: string;
-  href?: string;
-  children: ReactElement;
-}
 
 const ListItem: FC<IListItem> = ({
   userData,

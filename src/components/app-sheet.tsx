@@ -2,14 +2,12 @@
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
 } from "@/components/ui/sheet";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { Input } from "./ui/input";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { Button } from "./ui/button";
 import { Send } from "lucide-react";
 
@@ -20,15 +18,21 @@ interface ISheet {
 
 const baseUrl = "http://localhost:3000";
 
+type contentDataType = {
+  content: any
+}
+
 const AppSheet: FC<ISheet> = ({ onOpenChange, open }) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
-  const [generatedText, setGeneratedText] = useState('');
+  } = useForm<contentDataType>();
+  const [generatedText, setGeneratedText] = useState([]);
 
-  const onSubmit = async (data: { content: any }) => {
+  // useEffect(() => {console.log(generatedText)}, [generatedText]);
+
+  const onSubmit:SubmitHandler<contentDataType> = async (data: { content: any }) => {
     try {
       const response = await fetch(`${baseUrl}/api/chat`, {
         method: "POST",
@@ -38,10 +42,9 @@ const AppSheet: FC<ISheet> = ({ onOpenChange, open }) => {
         body: JSON.stringify({ messages: data.content }),
       });
 
-      for await (const chunk of response.body) {
-        const data = await chunk.json();
-        setGeneratedText((prevText) => prevText + data.content);
-      }
+      const text = await response.json();
+
+      setGeneratedText(text.messages);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -53,7 +56,11 @@ const AppSheet: FC<ISheet> = ({ onOpenChange, open }) => {
         <SheetHeader>
           <SheetTitle>Ask About Country!</SheetTitle>
         </SheetHeader>
-        <p>{generatedText}</p>
+        <p>
+          {generatedText.reduce((collection, item) => {
+            return new String(collection).concat(item);
+          }, new String(""))}
+        </p>
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col items-end h-full pb-12"

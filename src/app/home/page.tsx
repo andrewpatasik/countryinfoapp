@@ -1,17 +1,16 @@
 "use client";
-import AppSheet from "@/components/app-sheet";
-import CardPreview from "@/components/card-preview";
-import LoadingIndicator from "@/components/loading-indicator";
-import Modal from "@/components/modal";
-import Topbar from "@/components/top-bar";
-import { useCountry } from "@/hooks/use-country";
-import { useModal } from "@/hooks/use-modal";
-import { useSheet } from "@/hooks/use-sheet";
-import { toast } from "@/hooks/use-toast";
+import {
+  AppSheet,
+  CardPreview,
+  LoadingIndicator,
+  Modal,
+  Topbar,
+} from "@/components";
+import { toast, useCountry, useModal, useSheet } from "@/hooks";
 import { gql, useQuery } from "@apollo/client";
 import { Sparkle } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { useEffect } from "react";
+import { Key, useEffect } from "react";
 
 const GET_COUNTRIES_QUERY = gql`
   query getCountries {
@@ -23,51 +22,6 @@ const GET_COUNTRIES_QUERY = gql`
     }
   }
 `;
-
-const dummyCountry = [
-  {
-    name: "Switzerland",
-    capital: "Bern",
-    currency: "CHE,CHF,CHW",
-    emoji: "🇨🇭",
-    __typename: "Country",
-  },
-  {
-    name: "Switzerland",
-    capital: "Bern",
-    currency: "CHE,CHF,CHW",
-    emoji: "🇨🇭",
-    __typename: "Country",
-  },
-  {
-    name: "Switzerland",
-    capital: "Bern",
-    currency: "CHE,CHF,CHW",
-    emoji: "🇨🇭",
-    __typename: "Country",
-  },
-  {
-    name: "Switzerland",
-    capital: "Bern",
-    currency: "CHE,CHF,CHW",
-    emoji: "🇨🇭",
-    __typename: "Country",
-  },
-  {
-    name: "Switzerland",
-    capital: "Bern",
-    currency: "CHE,CHF,CHW",
-    emoji: "🇨🇭",
-    __typename: "Country",
-  },
-  {
-    name: "Switzerland",
-    capital: "Bern",
-    currency: "CHE,CHF,CHW",
-    emoji: "🇨🇭",
-    __typename: "Country",
-  },
-];
 
 const Home = () => {
   const { data, loading } = useQuery(GET_COUNTRIES_QUERY);
@@ -100,17 +54,27 @@ const Home = () => {
       <AppSheet open={isSheetOpen} onOpenChange={handleIsSheetChange} />
       <Topbar />
       <ul className="py-24 w-full grid grid-cols-1 md:px-4 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {data.countries.map((country, index) => (
-          <CardPreview
-            key={index}
-            capital={country.capital}
-            code={country.emoji}
-            currency={country.currency}
-            name={country.name}
-            handleIsModalOpen={handleIsModalChange}
-            handleFetchCountry={fetchCountry}
-          />
-        ))}
+        {data.countries.map(
+          (
+            country: {
+              capital: string;
+              emoji: string;
+              currency: string;
+              name: string;
+            },
+            index: Key | null | undefined
+          ) => (
+            <CardPreview
+              key={index}
+              capital={country.capital}
+              code={country.emoji}
+              currency={country.currency}
+              name={country.name}
+              handleIsModalOpen={handleIsModalChange}
+              handleFetchCountry={fetchCountry}
+            />
+          )
+        )}
       </ul>
 
       <div className="fixed bottom-24 md:bottom-10 right-10 z-50">

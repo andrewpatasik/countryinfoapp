@@ -5,14 +5,14 @@ import MobileNavigation from "./mobile-navigation";
 import { useSession } from "next-auth/react";
 
 const AppNavigation = () => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
 
   const isMobile = useIsMobile(431);
 
   return !isMobile ? (
-    <DesktopNavigation userData={session?.user} />
+    <DesktopNavigation userData={session?.user} status={status} />
   ) : (
-    <MobileNavigation userData={session?.user} />
+    <MobileNavigation userData={session?.user} status={status} />
   );
 };
 
