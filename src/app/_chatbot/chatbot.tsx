@@ -75,7 +75,7 @@ const Chatbot: FC<ChatbotValue> = ({ open, onOpenChange }) => {
       open={open}
       onOpenChange={onOpenChange}
     >
-      <ScrollArea className="flex flex-col h-full scrollbar-hide">
+      <ScrollArea className=" mt-4 flex flex-col h-full scrollbar-hide">
         {chatHistory.map((chat, index, row) => (
           <p
             key={index}
@@ -102,7 +102,6 @@ const Chatbot: FC<ChatbotValue> = ({ open, onOpenChange }) => {
           {...register("content", { required: true })}
           id="content"
         />
-        {errors.content && <span className="error">Prompt is required</span>}
         <Button type="submit">
           <Send />
         </Button>
