@@ -7,7 +7,7 @@ export interface UserValue {
   image?: string | null | undefined;
 }
 
-export const handler = NextAuth({
+const handler = NextAuth({
   providers: [
     GoogleProvider({
       clientId: (process.env.NEXT_PUBLIC_CLIENT_ID as string) ?? "",
@@ -15,11 +15,11 @@ export const handler = NextAuth({
     }),
   ],
   callbacks: {
-    async session({ session, token, user }) {
+    async session({ session, token }) {
       session.user = token.user as UserValue
       return session;
     },
-    async jwt({ token, user, trigger, session }) {
+    async jwt({ token, user }) {
       if (user) {
         token.user = user;
       }

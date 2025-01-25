@@ -13,7 +13,7 @@ interface ChatbotValue {
 }
 
 type contentDataType = {
-  content: any;
+  content: string;
 };
 
 interface ChatHistoryValue {
@@ -25,12 +25,8 @@ interface ChatHistoryValue {
 const baseUrl = "http://localhost:3000";
 
 const Chatbot: FC<ChatbotValue> = ({ open, onOpenChange }) => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    resetField,
-  } = useForm<contentDataType>();
+  const { register, handleSubmit, resetField } =
+    useForm<contentDataType>();
   const [isGeneratedTextLoading, setIsGeneratedTextLoading] =
     useState<boolean>(false);
   const [chatHistory, setChatHistory] = useState<ChatHistoryValue[] | []>([]);
@@ -47,7 +43,7 @@ const Chatbot: FC<ChatbotValue> = ({ open, onOpenChange }) => {
   }, [chatHistory]);
 
   const onSubmit: SubmitHandler<contentDataType> = async (data: {
-    content: any;
+    content: string;
   }) => {
     resetField("content");
 
@@ -77,7 +73,7 @@ const Chatbot: FC<ChatbotValue> = ({ open, onOpenChange }) => {
 
       let done = false;
 
-      let systemChat: ChatHistoryValue = {
+      const systemChat: ChatHistoryValue = {
         isRoleUser: false,
         message: "",
         timestamp: new Date(),
@@ -94,7 +90,7 @@ const Chatbot: FC<ChatbotValue> = ({ open, onOpenChange }) => {
           .split("\n")
           .filter((line) => line.startsWith("data: "));
         for (const line of lines) {
-          let content = line.replace(/^data: /, "").trim();
+          const content = line.replace(/^data: /, "").trim();
           setStreamingChat((prev) => (prev += content.concat(" ")));
           systemChat.message += content.concat(" ");
         }
@@ -111,43 +107,45 @@ const Chatbot: FC<ChatbotValue> = ({ open, onOpenChange }) => {
 
   return (
     <AppSheet title="" open={open} onOpenChange={onOpenChange}>
-      <ScrollArea className=" mt-4 flex flex-col h-full scrollbar-hide">
-        {chatHistory.map((chat, index, row) => (
-          <p
-            key={index}
-            className={`${
-              !chat.isRoleUser ? "mr-auto text-left" : "ml-auto text-right"
-            } w-fit mb-4 p-2 bg-gray-200 text-gray-500 rounded-lg`}
-            ref={index + 1 === row.length ? bottomChatRef : null}
-          >
-            {chat.message}
-          </p>
-        ))}
-        {isGeneratedTextLoading && isStreamingLive ? (
-          <span>
-            <LoadingIndicator variants="dots" />
-          </span>
-        ) : !isGeneratedTextLoading && isStreamingLive ? (
-          <p className="mr-auto text-left w-fit mb-4 p-2 bg-gray-200 text-gray-500 rounded-lg">
-            {streamingChat}
-          </p>
-        ) : (
-          <></>
-        )}
-      </ScrollArea>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="w-full flex space-x-2 mt-auto pb-8"
-      >
-        <Input
-          type="text"
-          {...register("content", { required: true })}
-          id="content"
-        />
-        <Button type="submit">
-          <Send />
-        </Button>
-      </form>
+      <>
+        <ScrollArea className=" mt-4 flex flex-col h-full scrollbar-hide">
+          {chatHistory.map((chat, index, row) => (
+            <p
+              key={index}
+              className={`${
+                !chat.isRoleUser ? "mr-auto text-left" : "ml-auto text-right"
+              } w-fit mb-4 p-2 bg-gray-200 text-gray-500 rounded-lg`}
+              ref={index + 1 === row.length ? bottomChatRef : null}
+            >
+              {chat.message}
+            </p>
+          ))}
+          {isGeneratedTextLoading && isStreamingLive ? (
+            <span>
+              <LoadingIndicator variants="dots" />
+            </span>
+          ) : !isGeneratedTextLoading && isStreamingLive ? (
+            <p className="mr-auto text-left w-fit mb-4 p-2 bg-gray-200 text-gray-500 rounded-lg">
+              {streamingChat}
+            </p>
+          ) : (
+            <></>
+          )}
+        </ScrollArea>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="w-full flex space-x-2 mt-auto pb-8"
+        >
+          <Input
+            type="text"
+            {...register("content", { required: true })}
+            id="content"
+          />
+          <Button type="submit">
+            <Send />
+          </Button>
+        </form>
+      </>
     </AppSheet>
   );
 };

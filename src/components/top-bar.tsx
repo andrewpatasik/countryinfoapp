@@ -19,7 +19,7 @@ const Topbar = () => {
     return () => {
       debouncedSearchInput.cancel();
     };
-  }, [searchInput]);
+  }, [searchInput, handleSearchValueChange]);
 
   const handleOnChange: FormEventHandler = (event) => {
     const target = event.target as HTMLInputElement;

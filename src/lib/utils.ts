@@ -28,4 +28,4 @@ export const cleanText = (string: string) =>
     .replace(/\s*:\s*/, ":") // Fixes spaces around colon (Grace : becomes Grace:)
     .replace(/\s*(\w)\s+(?=\d)/g, "$1$2"); // Prevents spaces between digits
 
-export const convertEmojiToIso = (emoji: any) => code(emoji);
+export const convertEmojiToIso = (emoji: string) => code(emoji);

@@ -8,7 +8,6 @@ import { MapPin, Globe, DollarSign, Languages, Frame } from "lucide-react";
 import { FC } from "react";
 import UserAvatar from "./user-avatar";
 import { convertEmojiToIso } from "@/lib/utils";
-import { Separator } from "./ui/separator";
 import { CountryValue } from "@/app/types";
 
 interface IModal {

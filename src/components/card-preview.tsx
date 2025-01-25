@@ -41,7 +41,7 @@ const CardPreview: FC<ICardPreview> = ({
         <div className="flex items-center space-x-2">
           <button
             onClick={() => {
-              handleFetchCountry(countryCode).then((result) =>
+              handleFetchCountry(countryCode).then(() =>
                 handleIsModalOpen()
               );
             }}

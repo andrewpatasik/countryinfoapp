@@ -5,12 +5,12 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { FC, useState } from "react";
+import { FC, ReactElement } from "react";
 
 interface ISheet {
   open: boolean;
   onOpenChange: () => void;
-  children: any;
+  children: ReactElement;
   title: string;
 }
 

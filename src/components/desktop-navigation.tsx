@@ -65,7 +65,7 @@ const DesktopNavigation = ({
 
         break;
     }
-  }, [status]);
+  }, [status, userData?.image, userData?.name]);
 
   return (
     <Sidebar>
