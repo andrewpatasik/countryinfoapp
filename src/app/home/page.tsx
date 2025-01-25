@@ -1,12 +1,6 @@
 "use client";
-import {
-  AppSheet,
-  CardPreview,
-  LoadingIndicator,
-  Modal,
-  Topbar,
-} from "@/components";
-import { toast, useCountry, useModal, useSheet } from "@/hooks";
+import { CardPreview, LoadingIndicator, Modal, Topbar } from "@/components";
+import { toast, useCountry, useModal, useSearch, useSheet } from "@/hooks";
 import { gql, useQuery } from "@apollo/client";
 import { Sparkle } from "lucide-react";
 import { useSession } from "next-auth/react";
@@ -29,6 +23,7 @@ const Home = () => {
   const { isModalOpen, handleIsModalChange } = useModal();
   const { isSheetOpen, handleIsSheetChange } = useSheet();
   const { country, fetchCountry } = useCountry();
+  const { searchValue } = useSearch();
   const { data: session } = useSession();
 
   useEffect(() => {
@@ -46,7 +41,7 @@ const Home = () => {
     );
 
   return (
-    <div className="relative min-h-screen lg:px-4 text-gray-400">
+    <div className="relative w-full min-h-screen lg:px-4 text-gray-400">
       <Modal
         modalContent={country}
         open={isModalOpen}
@@ -55,27 +50,43 @@ const Home = () => {
       <Chatbot open={isSheetOpen} onOpenChange={handleIsSheetChange} />
       <Topbar />
       <ul className="py-24 w-full grid grid-cols-1 md:px-4 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {data.countries.map(
-          (
-            country: {
-              capital: string;
-              emoji: string;
-              currency: string;
-              name: string;
-            },
-            index: Key | null | undefined
-          ) => (
-            <CardPreview
-              key={index}
-              capital={country.capital}
-              code={country.emoji}
-              currency={country.currency}
-              name={country.name}
-              handleIsModalOpen={handleIsModalChange}
-              handleFetchCountry={fetchCountry}
-            />
-          )
-        )}
+        {!searchValue
+          ? data.countries.map(
+              (
+                country: {
+                  capital: string;
+                  emoji: string;
+                  currency: string;
+                  name: string;
+                },
+                index: Key | null | undefined
+              ) => (
+                <CardPreview
+                  key={index}
+                  capital={country.capital}
+                  code={country.emoji}
+                  currency={country.currency}
+                  name={country.name}
+                  handleIsModalOpen={handleIsModalChange}
+                  handleFetchCountry={fetchCountry}
+                />
+              )
+            )
+          : data.countries
+              .filter((country: any) =>
+                country.name.toLowerCase().includes(searchValue)
+              )
+              .map((filteredCountry: any, index: number) => (
+                <CardPreview
+                  key={index}
+                  capital={filteredCountry.capital}
+                  code={filteredCountry.emoji}
+                  currency={filteredCountry.currency}
+                  name={filteredCountry.name}
+                  handleIsModalOpen={handleIsModalChange}
+                  handleFetchCountry={fetchCountry}
+                />
+              ))}
       </ul>
 
       <div className="fixed bottom-24 md:bottom-10 right-10 z-50">
