@@ -18,22 +18,39 @@ export async function POST(req: Request) {
       stream: true,
     });
 
-    let generatedText = new String("");
+    const encoder = new TextEncoder();
 
-    for await (const chunk of completion) {
-      const content = chunk.choices[0]?.delta?.content || "";
-      process.stdout.write(content);
-      generatedText += content;
-    }
+    // Create a readable stream for the response
+    const readableStream = new ReadableStream({
+      async start(controller) {
+        try {
+          for await (const chunk of completion) {
+            const content = chunk.choices[0]?.delta?.content || "";
+            if (content) {
+              controller.enqueue(encoder.encode(`data: ${content}\n\n`));
+            }
+          }
+          controller.close();
+        } catch (error) {
+          console.error("Streaming error:", error);
+          controller.error(error);
+        }
+      },
+    });
 
-    return Response.json({
-      data: {
-        isRoleUser: false,
-        message: generatedText,
-        timestamp: new Date(),
+    // Return the readable stream
+    return new Response(readableStream, {
+      headers: {
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
+        Connection: "keep-alive",
       },
     });
   } catch (error) {
-    console.error(error);
+    console.error("API Error:", error);
+    return new Response(JSON.stringify({ error: "Internal Server Error" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 }

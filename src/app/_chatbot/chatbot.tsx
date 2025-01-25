@@ -5,6 +5,7 @@ import { Send } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { cleanText } from "@/lib/utils";
 
 interface ChatbotValue {
   open: boolean;
@@ -33,11 +34,17 @@ const Chatbot: FC<ChatbotValue> = ({ open, onOpenChange }) => {
   const [isGeneratedTextLoading, setIsGeneratedTextLoading] =
     useState<boolean>(false);
   const [chatHistory, setChatHistory] = useState<ChatHistoryValue[] | []>([]);
+  const [streamingChat, setStreamingChat] = useState<string>("");
+  const [isStreamingLive, setIsStreamingLive] = useState<boolean>(false);
   const bottomChatRef = useRef<HTMLParagraphElement | null>(null);
 
   useEffect(() => {
     bottomChatRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [isGeneratedTextLoading]);
+
+  useEffect(() => {
+    console.log(chatHistory);
+  }, [chatHistory]);
 
   const onSubmit: SubmitHandler<contentDataType> = async (data: {
     content: any;
@@ -53,6 +60,7 @@ const Chatbot: FC<ChatbotValue> = ({ open, onOpenChange }) => {
 
       setChatHistory((prev) => [...prev, userChat]);
       setIsGeneratedTextLoading(true);
+      setIsStreamingLive(true);
 
       const response = await fetch(`${baseUrl}/api/chat`, {
         method: "POST",
@@ -61,20 +69,48 @@ const Chatbot: FC<ChatbotValue> = ({ open, onOpenChange }) => {
         },
         body: JSON.stringify({ prompt: data.content }),
       });
-      const payload = await response.json();
+
+      if (!response.body) return;
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder("utf-8");
+
+      let done = false;
+
+      let systemChat: ChatHistoryValue = {
+        isRoleUser: false,
+        message: "",
+        timestamp: new Date(),
+      };
+
       setIsGeneratedTextLoading(false);
-      setChatHistory((prev) => [...prev, payload.data]);
+
+      while (!done) {
+        const { value, done: readerDone } = await reader.read();
+        done = readerDone;
+
+        const chunk = decoder.decode(value, { stream: true });
+        const lines = chunk
+          .split("\n")
+          .filter((line) => line.startsWith("data: "));
+        for (const line of lines) {
+          let content = line.replace(/^data: /, "").trim();
+          setStreamingChat((prev) => (prev += content.concat(" ")));
+          systemChat.message += content.concat(" ");
+        }
+      }
+
+      systemChat.message = cleanText(systemChat.message);
+      setIsStreamingLive(false);
+      setChatHistory((prev) => [...prev, systemChat]);
+      setStreamingChat("");
     } catch (error) {
       console.error("Error:", error);
     }
   };
 
   return (
-    <AppSheet
-      title=""
-      open={open}
-      onOpenChange={onOpenChange}
-    >
+    <AppSheet title="" open={open} onOpenChange={onOpenChange}>
       <ScrollArea className=" mt-4 flex flex-col h-full scrollbar-hide">
         {chatHistory.map((chat, index, row) => (
           <p
@@ -87,10 +123,16 @@ const Chatbot: FC<ChatbotValue> = ({ open, onOpenChange }) => {
             {chat.message}
           </p>
         ))}
-        {isGeneratedTextLoading && (
+        {isGeneratedTextLoading && isStreamingLive ? (
           <span>
             <LoadingIndicator variants="dots" />
           </span>
+        ) : !isGeneratedTextLoading && isStreamingLive ? (
+          <p className="mr-auto text-left w-fit mb-4 p-2 bg-gray-200 text-gray-500 rounded-lg">
+            {streamingChat}
+          </p>
+        ) : (
+          <></>
         )}
       </ScrollArea>
       <form
