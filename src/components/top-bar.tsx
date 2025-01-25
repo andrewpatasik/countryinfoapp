@@ -2,19 +2,16 @@
 import { Search } from "lucide-react";
 import { FormEventHandler, useEffect, useState } from "react";
 import { Input } from "./ui/input";
+import { useSearch } from "@/hooks";
 import _ from "lodash";
 
 const Topbar = () => {
-  const [searchValue, setSearchValue] = useState<string>("");
+  const { handleSearchValueChange } = useSearch();
   const [searchInput, setSearchInput] = useState<string>("");
 
   useEffect(() => {
-    console.log(searchValue)
-  }, [searchValue]);
-
-  useEffect(() => {
     const debouncedSearchInput = _.debounce(
-      () => setSearchValue(searchInput),
+      () => handleSearchValueChange(searchInput),
       1000
     );
     debouncedSearchInput();
