@@ -10,6 +10,7 @@ import { toast } from "@/hooks/use-toast";
 import { HouseIcon, UserIcon } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { FC, ReactElement, ReactNode } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 const ICON_SIZE: number = 30;
 
@@ -35,9 +36,9 @@ const navigationLink: NavigationLinkValue[] = [
 
 const MobileNavigation = ({
   userData,
-  status
+  status,
 }: {
-  userData: UserValue | undefined,
+  userData: UserValue | undefined;
   status: "authenticated" | "loading" | "unauthenticated";
 }) => {
   return (
@@ -45,8 +46,25 @@ const MobileNavigation = ({
       <NavigationMenu className="h-full">
         <NavigationMenuList className="w-screen h-full justify-around">
           {navigationLink.map((item, index) => (
-            <ListItem userData={userData} title={item.title} href={item.href}>
-              {item.icon}
+            <ListItem
+              userData={item.title !== "Profile" ? undefined : userData}
+              title={item.title}
+              href={item.href}
+            >
+              {item.title !== "Profile" ? (
+                item.icon
+              ) : (
+                <Avatar>
+                  <AvatarImage
+                    className="rounded-full w-8 h-8"
+                    src={userData?.image as string}
+                    alt="user photo"
+                  />
+                  <AvatarFallback className="bg-gray-100 rounded-full p-1">
+                    {item.icon}
+                  </AvatarFallback>
+                </Avatar>
+              )}
             </ListItem>
           ))}
         </NavigationMenuList>
