@@ -94,7 +94,7 @@ const DesktopNavigation = ({
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton>
                   <Avatar>
-                    <AvatarImage src="" alt="" />
+                    <AvatarImage src={userData?.image as string} alt="" />
                     <AvatarFallback className="bg-gray-100 rounded-full p-1">
                       {user.icon}
                     </AvatarFallback>
